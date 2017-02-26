@@ -1,6 +1,7 @@
 (ns leiningen.build-info
   (:require [clojure.java.io :as io]
-            [clojure.java.shell :as sh])
+            [clojure.java.shell :as sh]
+            [clojure.string :as str])
   (:import (java.time.format DateTimeFormatter)
            (java.time ZonedDateTime)))
 
@@ -11,7 +12,7 @@
                        "resources/build-info.edn")
         info {:version (let [resp (sh/sh "git" "describe")]
                          (if (-> resp :exit zero?)
-                           (-> resp :out)
+                           (-> resp :out str/trim)
                            "DEV"))
               :build-time (-> (ZonedDateTime/now)
                               (.format DateTimeFormatter/ISO_OFFSET_DATE_TIME))
